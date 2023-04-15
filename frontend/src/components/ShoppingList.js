@@ -78,7 +78,7 @@ export default function ShoppingList() {
   const onChangeCount = async (id, count) => {
     await withLoaderAndReload(async () => {
       await Calls.updateShoppingItem(id, {count: count})
-      successMessage(`Změněm počet u položky`)
+      successMessage(`Změněn počet u položky`)
     })
   }
 
