@@ -1,7 +1,7 @@
 package cz.simekdaniel.nakupniseznam.api;
 
-import com.google.gson.Gson;
 import cz.simekdaniel.nakupniseznam.data.ShoppingItem;
+import cz.simekdaniel.nakupniseznam.data.ShoppingItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +17,24 @@ public class NakupniSeznamAPI
     @Autowired
     private ShoppingItemService shoppingItemService;
 
-    private final Gson gson = new Gson();
-
     public NakupniSeznamAPI(ShoppingItemService shoppingItemService)
     {
         this.shoppingItemService = shoppingItemService;
     }
 
     @GetMapping(value = "/shoppingList", produces = APPLICATION_JSON_VALUE)
-    public List<ShoppingItem> shoppingListList()
+    public List<ShoppingItem> shoppingItemsList()
     {
         System.out.println(shoppingItemService.allItems());
         return shoppingItemService.allItems();
+    }
+
+    @GetMapping(value = "/shoppingList/{state}", produces = APPLICATION_JSON_VALUE)
+    public List<ShoppingItem> shoppingItemsListWithFilter(@PathVariable ShoppingItemStatus state)
+    {
+        List<ShoppingItem> shoppingItemList = shoppingItemService.filterItems(state);
+        System.out.println(shoppingItemList);
+        return shoppingItemList;
     }
 
     @PostMapping(value = "/shoppingItem")

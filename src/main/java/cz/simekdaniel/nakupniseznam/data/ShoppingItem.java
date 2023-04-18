@@ -82,11 +82,6 @@ public class ShoppingItem
         this.state = state.equals("active") ? ShoppingItemStatus.ACTIVE : ShoppingItemStatus.COMPLETED;
     }
 
-    public LocalDateTime getCreatedAt()
-    {
-        return createdAt;
-    }
-
     public void setCreatedAt(LocalDateTime createdAt)
     {
         this.createdAt = createdAt;

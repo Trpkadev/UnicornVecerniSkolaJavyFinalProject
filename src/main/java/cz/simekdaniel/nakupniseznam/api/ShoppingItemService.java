@@ -1,6 +1,7 @@
 package cz.simekdaniel.nakupniseznam.api;
 
 import cz.simekdaniel.nakupniseznam.data.ShoppingItem;
+import cz.simekdaniel.nakupniseznam.data.ShoppingItemStatus;
 import cz.simekdaniel.nakupniseznam.repos.ShoppingItemRepo;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,12 @@ public class ShoppingItemService
     public void delete(int id)
     {
         shoppingItemRepo.deleteById(id);
+    }
+
+    public List<ShoppingItem> filterItems(ShoppingItemStatus state)
+    {
+        List<ShoppingItem> shoppingItemList = shoppingItemRepo.findAll();
+        shoppingItemList.removeIf(shoppingItem -> shoppingItem.getState() != state);
+        return shoppingItemList;
     }
 }
