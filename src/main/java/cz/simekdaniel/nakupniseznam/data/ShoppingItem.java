@@ -79,7 +79,7 @@ public class ShoppingItem
 
     public void setState(String state)
     {
-        this.state = state.equals("active") ? ShoppingItemStatus.ACTIVE : ShoppingItemStatus.COMPLETED;
+        this.state = state.equals("active") ? ShoppingItemStatus.active : ShoppingItemStatus.completed;
     }
 
     public void setCreatedAt(LocalDateTime createdAt)

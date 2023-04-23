@@ -2,7 +2,6 @@ package cz.simekdaniel.nakupniseznam.api;
 
 import cz.simekdaniel.nakupniseznam.data.ShoppingItem;
 import cz.simekdaniel.nakupniseznam.data.ShoppingItemStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +10,9 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping
 public class NakupniSeznamAPI
 {
-    @Autowired
-    private ShoppingItemService shoppingItemService;
+    private final ShoppingItemService shoppingItemService;
 
     public NakupniSeznamAPI(ShoppingItemService shoppingItemService)
     {
@@ -23,17 +20,16 @@ public class NakupniSeznamAPI
     }
 
     @GetMapping(value = "/shoppingList", produces = APPLICATION_JSON_VALUE)
-    public List<ShoppingItem> shoppingItemsList()
+    public List<ShoppingItem> shoppingItemsListWithFilter(@RequestParam(name = "state", defaultValue = "") ShoppingItemStatus state)
     {
-        System.out.println(shoppingItemService.allItems());
-        return shoppingItemService.allItems();
-    }
-
-    @GetMapping(value = "/shoppingList/{state}", produces = APPLICATION_JSON_VALUE)
-    public List<ShoppingItem> shoppingItemsListWithFilter(@PathVariable ShoppingItemStatus state)
-    {
-        List<ShoppingItem> shoppingItemList = shoppingItemService.filterItems(state);
-        System.out.println(shoppingItemList);
+        List<ShoppingItem> shoppingItemList;
+        if (state != null)
+        {
+            shoppingItemList = shoppingItemService.filterItems(state);
+        } else
+        {
+            shoppingItemList = shoppingItemService.allItems();
+        }
         return shoppingItemList;
     }
 
