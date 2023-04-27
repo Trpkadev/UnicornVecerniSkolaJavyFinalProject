@@ -40,8 +40,9 @@ public class NakupniSeznamAPI
         if (!shoppingItem.getContent().isEmpty())
         {
             shoppingItemService.save(shoppingItem);
+            return new ResponseEntity<>(shoppingItem, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(shoppingItem, HttpStatus.CREATED);
+        return null;
     }
 
     @PutMapping(value = "/shoppingItem/{id}")
@@ -54,6 +55,6 @@ public class NakupniSeznamAPI
     public ResponseEntity<String> shoppingItemDelete(@PathVariable int id)
     {
         shoppingItemService.delete(id);
-        return new ResponseEntity<>("Položka smazána", HttpStatus.OK);
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 }
