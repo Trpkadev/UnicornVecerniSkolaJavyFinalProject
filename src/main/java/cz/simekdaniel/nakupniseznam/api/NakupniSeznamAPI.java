@@ -2,6 +2,7 @@ package cz.simekdaniel.nakupniseznam.api;
 
 import cz.simekdaniel.nakupniseznam.data.ShoppingItem;
 import cz.simekdaniel.nakupniseznam.data.ShoppingItemStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class NakupniSeznamAPI
     }
 
     @GetMapping(value = "/shoppingList", produces = APPLICATION_JSON_VALUE)
-    public List<ShoppingItem> shoppingItemsListWithFilter(@RequestParam(name = "state", defaultValue = "") ShoppingItemStatus state)
+    public ResponseEntity<List<ShoppingItem>> shoppingItemsListWithFilter(@RequestParam(name = "state", defaultValue = "") ShoppingItemStatus state)
     {
         List<ShoppingItem> shoppingItemList;
         if (state != null)
@@ -30,26 +31,29 @@ public class NakupniSeznamAPI
         {
             shoppingItemList = shoppingItemService.allItems();
         }
-        return shoppingItemList;
+        return new ResponseEntity<>(shoppingItemList, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/shoppingItem")
     public ResponseEntity<ShoppingItem> shoppingItemCreate(@RequestBody ShoppingItem shoppingItem)
     {
-        shoppingItemService.save(shoppingItem);
-        return ResponseEntity.ok(shoppingItem);
+        if (!shoppingItem.getContent().isEmpty())
+        {
+            shoppingItemService.save(shoppingItem);
+        }
+        return new ResponseEntity<>(shoppingItem, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/shoppingItem/{id}")
-    public ShoppingItem shoppingItemEdit(@RequestBody ShoppingItem shoppingItem, @PathVariable int id)
+    public ResponseEntity<ShoppingItem> shoppingItemEdit(@RequestBody ShoppingItem shoppingItem, @PathVariable int id)
     {
-        return shoppingItemService.edit(id, shoppingItem);
+        return new ResponseEntity<>(shoppingItemService.edit(id, shoppingItem), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/shoppingItem/{id}")
-    public String shoppingItemDelete(@PathVariable int id)
+    public ResponseEntity<String> shoppingItemDelete(@PathVariable int id)
     {
         shoppingItemService.delete(id);
-        return "{}";
+        return new ResponseEntity<>("Položka smazána", HttpStatus.OK);
     }
 }
