@@ -9,15 +9,14 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: shopping_item
 
-
-  app:
-    build: .
-    image: unicornvecerniskolajavyfinalproject-app:latest
-    ports:
-      - "3004:3004"
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/shopping_item
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
+#  app:
+#    build: .
+#    image: unicornvecerniskolajavyfinalproject-app:latest
+#    ports:
+#      - "3004:3004"
+#    depends_on:
+#      - db
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/shopping_item
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: 1234
