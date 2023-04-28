@@ -37,10 +37,23 @@ public class NakupniSeznamAPI
     @PostMapping(value = "/shoppingItem")
     public ResponseEntity<ShoppingItem> shoppingItemCreate(@RequestBody ShoppingItem shoppingItem)
     {
+        boolean itemAlreadyExists = false;
         if (!shoppingItem.getContent().isEmpty())
         {
-            shoppingItemService.save(shoppingItem);
-            return new ResponseEntity<>(shoppingItem, HttpStatus.CREATED);
+            for (ShoppingItem shoppingItemInDatabase : shoppingItemService.allItems())
+            {
+                if (shoppingItemInDatabase.getContent().equals(shoppingItem.getContent()))
+                {
+                    itemAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!itemAlreadyExists)
+            {
+                shoppingItemService.save(shoppingItem);
+                return new ResponseEntity<>(shoppingItem, HttpStatus.CREATED);
+            }
+            return null;
         }
         return null;
     }
