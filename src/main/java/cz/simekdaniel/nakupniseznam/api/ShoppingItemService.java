@@ -33,11 +33,11 @@ public class ShoppingItemService
     public ShoppingItem edit(int id, ShoppingItem shoppingItemNew)
     {
         Optional<ShoppingItem> shoppingItemToUpdate = shoppingItemRepo.findById(id);
-        if(shoppingItemNew.getCount() != 0)
+        if (shoppingItemNew.getCount() != 0)
         {
             shoppingItemToUpdate.get().setCount(shoppingItemNew.getCount());
         }
-        if(shoppingItemNew.getState() != null)
+        if (shoppingItemNew.getState() != null)
         {
             shoppingItemToUpdate.get().setState(shoppingItemNew.getState());
         }
