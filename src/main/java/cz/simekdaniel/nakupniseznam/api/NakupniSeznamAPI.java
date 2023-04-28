@@ -51,6 +51,13 @@ public class NakupniSeznamAPI
         return new ResponseEntity<>(shoppingItemService.edit(id, shoppingItem), HttpStatus.CREATED);
     }
 
+    @GetMapping(value = "/shoppingItem/{id}")
+    public ResponseEntity<String> shoppingItemListAfterStatusChanged()
+    {
+        //To prevent warnings from GET calls on status changes
+        return new ResponseEntity<>("{}", HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/shoppingItem/{id}")
     public ResponseEntity<String> shoppingItemDelete(@PathVariable int id)
     {
