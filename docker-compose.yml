@@ -9,6 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: shopping_item
 
+#   OUTDATED
 #  app:
 #    build: .
 #    image: unicornvecerniskolajavyfinalproject-app:latest
