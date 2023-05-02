@@ -2,6 +2,8 @@ package cz.simekdaniel.nakupniseznam.api;
 
 import cz.simekdaniel.nakupniseznam.data.ShoppingItem;
 import cz.simekdaniel.nakupniseznam.data.ShoppingItemStatus;
+import cz.simekdaniel.nakupniseznam.repos.ShoppingItemRepo;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +16,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class NakupniSeznamAPI
 {
     private final ShoppingItemService shoppingItemService;
+    private final ShoppingItemRepo shoppingItemRepo;
 
-    public NakupniSeznamAPI(ShoppingItemService shoppingItemService)
+    public NakupniSeznamAPI(ShoppingItemService shoppingItemService,
+        ShoppingItemRepo shoppingItemRepo)
     {
         this.shoppingItemService = shoppingItemService;
+        this.shoppingItemRepo = shoppingItemRepo;
     }
+
+    // REV: Obecně mi tu chybělo logování, co se kdy děje s parametry (např. přes log4j, slf4j, ..., nebo i konzoli, která není ideální pro tyto účely)
 
     @GetMapping(value = "/shoppingList", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ShoppingItem>> shoppingItemsListWithFilter(@RequestParam(name = "state", defaultValue = "") ShoppingItemStatus state)
@@ -37,6 +44,12 @@ public class NakupniSeznamAPI
     @PostMapping(value = "/shoppingItem")
     public ResponseEntity<ShoppingItem> shoppingItemCreate(@RequestBody ShoppingItem shoppingItem)
     {
+        // REV: Z pohledu algoritmizace se ověření, zda existuje ukládaná položka do databáze dá udělat efektivněji, například jeden ze způsobů níže
+        // 1) Najít v db pomocí content, zda existuje položka (nový dotaz do ShoppingItemRepo) - může vrátit například celou položku, nebo boolean informaci ano/ne
+        // 2) Ověřit, zda je položka v db již přítomná a pokud ne, tak povolit uložení do db, náznak jak udělat je níže
+        // Optional<ShoppingItem> foundShoppingItem = shoppingItemRepo.findByContent(shoppingItem.getContent());
+        // foundShoppingItem.ifPresent(shoppingItemService::save);
+
         boolean itemAlreadyExists = false;
         if (!shoppingItem.getContent().isEmpty())
         {

@@ -35,14 +35,17 @@ public class ShoppingItemService
         Optional<ShoppingItem> shoppingItemToUpdate = shoppingItemRepo.findById(id);
         if (shoppingItemNew.getCount() != 0)
         {
-            shoppingItemToUpdate.get().setCount(shoppingItemNew.getCount());
+            shoppingItemToUpdate.get().setCount(shoppingItemNew.getCount()); // REV: Pozor na práci s Optional, tímto způsobem se s ním nepracuje a takto to ani nemusí fungovat, pokud bude Optional prázdné (výjimka)
+            // pokud se použije metoda get(), která se obecně nedoporučuje používat ve většině případů, tak by to mělo předcháze kontrola, zda je Optional neprázdné přes metodu isPresent()
+            // obecně, ale chceme spíše používat metody, jako ifPresent, orElse, orElseThrow, ... které nám zvyšují přehlednost, snižují if konstrukty a zvyšují bezpečnost kódu
+            // mohlo by to vypadat např takto: shoppingItemToUpdate.ifPresent(shoppingItem -> shoppingItem.setCount(shoppingItemNew.getCount()));
         }
         if (shoppingItemNew.getState() != null)
         {
-            shoppingItemToUpdate.get().setState(shoppingItemNew.getState());
+            shoppingItemToUpdate.get().setState(shoppingItemNew.getState()); // REV: Stejné, jako výše
         }
-        save(shoppingItemToUpdate.get());
-        return shoppingItemToUpdate.get();
+        save(shoppingItemToUpdate.get()); // REV: Stejné, jako výše
+        return shoppingItemToUpdate.get(); // REV: Stejné, jako výše
     }
 
     public void delete(int id)
@@ -52,6 +55,7 @@ public class ShoppingItemService
 
     public List<ShoppingItem> filterItems(ShoppingItemStatus state)
     {
+        // REV: Mnohem efektivnější je nechat vrátit databázi položky daného stavu, než načítat všechny do paměti a pak na aplikační vrstvě je filtrovat (CPU a paměť / rychlost a pamětové nároky)
         List<ShoppingItem> shoppingItemList = shoppingItemRepo.findAll();
         shoppingItemList.removeIf(shoppingItem -> shoppingItem.getState() != state);
         return shoppingItemList;
